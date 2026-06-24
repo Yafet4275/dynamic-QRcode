@@ -28,6 +28,3 @@ Static QR codes require re-printing whenever a destination URL changes. Furtherm
 
 ## 💻 Running the Project Locally
 
-1. Clone the repository:
-   ```bash
-   git clone [https://github.com/yourusername/dynamic-qr-platform.git](https://github.com/yourusername/dynamic-qr-platform.git)
