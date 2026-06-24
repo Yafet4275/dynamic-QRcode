@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  backend:
+    build: ./fastapi-backend
+    container_name: core_api
+    restart: always
+    environment:
+      - DATABASE_URL=postgresql://user:password@db:5432/app_db
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+
+  frontend:
+    build: ./react-frontend
+    container_name: web_ui
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+
+  db:
+    image: postgres:15-alpine
+    container_name: main_db
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: app_db
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  n8n:
+    image: docker.n8n.io/n8nio/n8n
+    container_name: automation_engine
+    restart: always
+    ports:
+      - "5678:5678"
+    environment:
+      - N8N_HOST=localhost
+      - N8N_PORT=5678
+      - N8N_PROTOCOL=http
+      - NODE_ENV=production
+      - DB_TYPE=postgresdb
+      - DB_POSTGRESDB_DATABASE=app_db
+      - DB_POSTGRESDB_HOST=db
+
+volumes:
+  pgdata:
